@@ -1,7 +1,7 @@
-import { Collection, IndexSpecification, Db } from 'mongodb'
-import { isEqual, isObject, pick } from 'lodash'
-import logger from '@src/logger'
-import collectionExists from '@src/utils/repo/collectionExists'
+import { Collection, IndexSpecification, Db } from "mongodb"
+import isEqual from "lodash.isequal"
+import collectionExists from "./collectionExists"
+import debug from "../debug"
 
 export default async function syncIndexes<T>(
   db: Db,
@@ -11,9 +11,7 @@ export default async function syncIndexes<T>(
   await removeUnspecifiedIndexes(db, collection, indexes)
 
   if (indexes.length) {
-    indexes.forEach((index) =>
-      logger.info(`Creating index on ${collection.collectionName}:`, index)
-    )
+    indexes.forEach((index) => debug(`Creating index on ${collection.collectionName}:`, index))
 
     await collection.createIndexes(indexes.map((index) => ({ ...index, background: true })))
   }
@@ -30,8 +28,8 @@ async function removeUnspecifiedIndexes<T>(
 
   const existingIndexes = await collection.indexes()
 
-  const isSubset = (partial: any, whole: any) => {
-    if (isObject(partial)) {
+  const isSubset = (partial: any, whole: any): boolean => {
+    if (typeof partial === "object") {
       return Object.keys(partial).every((key) => isSubset(partial[key], whole?.[key]))
     }
 
@@ -39,13 +37,13 @@ async function removeUnspecifiedIndexes<T>(
   }
 
   const removedIndexes = existingIndexes.filter(
-    (index) =>
+    (index: any) =>
       !isEqual(index.key, { _id: 1 }) && !indexes.some((newIndex) => isSubset(newIndex, index))
   )
 
   await Promise.all(
-    removedIndexes.map(async (index) => {
-      logger.info(`Dropping index on ${collection.collectionName}:`, index)
+    removedIndexes.map(async (index: any) => {
+      debug(`Dropping index on ${collection.collectionName}:`, index)
       await collection.dropIndex(index.name)
     })
   )
