@@ -1,0 +1,17 @@
+{
+  "name": "caramon",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "<reason.koan@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dataloader": "^2.0.0",
+    "mongodb": "^3.5.9",
+    "yup": "^0.29.1"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.5.25",
+    "@types/yup": "^0.29.3",
+    "typescript": "^3.9.7"
+  }
+}
