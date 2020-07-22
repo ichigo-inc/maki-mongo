@@ -7,6 +7,7 @@ let db: Db | undefined = undefined
 const connectionHandler = new EventEmitter()
 
 export function setConnection(newClient: MongoClient, newDb: Db) {
+  client = newClient
   db = newDb
   connectionHandler.emit("connected", db)
 }
