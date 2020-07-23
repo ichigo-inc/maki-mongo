@@ -18,3 +18,5 @@ const caramon = {
 export default caramon
 
 export * from "./errors"
+
+export { Document } from "./collection"

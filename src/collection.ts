@@ -1,5 +1,5 @@
 import { Collection, ObjectID, IndexSpecification } from "mongodb"
-import { Schema } from "yup"
+import { Schema, object } from "yup"
 import syncIndexes from "./indexes/syncIndexes"
 import { onConnected, onDisconnected } from "./connectionStatus"
 import { NotYetConnectedError } from "./errors"
@@ -13,15 +13,16 @@ export interface Document {
   updatedAt: Date
 }
 
-export default function wrapCollection<DocumentType extends Document>({
-  collectionName,
-  schema,
-  indexes = []
-}: {
-  collectionName: string
-  schema: Schema<any>
-  indexes?: IndexSpecification[]
-}): WrappedCollection<DocumentType> {
+export default function wrapCollection<DocumentType extends Document>(
+  collectionName: string,
+  {
+    schema,
+    indexes = []
+  }: {
+    schema?: Schema<any>
+    indexes?: IndexSpecification[]
+  } = {}
+): WrappedCollection<DocumentType> {
   let collection: Collection<Readonly<DocumentType>> | undefined = undefined
 
   onConnected((db) => {
@@ -42,7 +43,11 @@ export default function wrapCollection<DocumentType extends Document>({
 
   const collectionMethods = setupCollectionMethods(ensureCollection)
   const dataLoaderMethods = setupDataLoaderMethods(ensureCollection)
-  const customMethods = setupCustomMethods(ensureCollection, schema, dataLoaderMethods.findById)
+  const customMethods = setupCustomMethods(
+    ensureCollection,
+    schema || object(),
+    dataLoaderMethods.findById
+  )
 
   return {
     ...collectionMethods,
