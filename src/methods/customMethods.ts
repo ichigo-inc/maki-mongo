@@ -7,7 +7,7 @@ import {
   ObjectId
 } from "mongodb"
 import { Document } from "../collection"
-import { Schema } from "yup"
+import { ZodObject } from "zod"
 
 export type AttributesOnCreate<DocumentType extends Document> = Omit<
   DocumentType,
@@ -39,7 +39,7 @@ export interface CustomMethods<DocumentType extends Document> {
 
 export default function setupCustomMethods<DocumentType extends Document>(
   ensureCollection: () => Collection<DocumentType>,
-  schema: Schema<any>,
+  schema: ZodObject<any>,
   findById: (_id: ObjectId) => Promise<DocumentType | undefined>
 ): CustomMethods<DocumentType> {
   return {
@@ -75,7 +75,7 @@ export default function setupCustomMethods<DocumentType extends Document>(
     },
 
     async createDocument(document) {
-      const castDocument = await schema.validate(document)
+      const castDocument = schema.parse(document)
 
       const collection = ensureCollection()
 
@@ -89,6 +89,10 @@ export default function setupCustomMethods<DocumentType extends Document>(
     },
 
     async updateDocument(document, update, options) {
+      if (update.$set) {
+        schema.deepPartial().nonstrict().parse(update.$set)
+      }
+
       const result = await ensureCollection().findOneAndUpdate(
         { _id: document._id } as any,
         { ...update, $set: { updatedAt: new Date(), ...update.$set } } as any,

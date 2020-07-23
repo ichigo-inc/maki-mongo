@@ -1,14 +1,14 @@
+import * as z from "zod"
 import { wrapCollection, Document } from "../../../src"
 import objectId from "../validators/objectId"
-import { object, InferType, string, date } from "yup"
 
-const schema = object().required().shape({
-  projectId: objectId().required(),
-  occurredAt: date().required(),
-  message: string().required()
+const schema = z.object({
+  projectId: objectId(),
+  occurredAt: z.date(),
+  message: z.string()
 })
 
-export type LogLine = Document & InferType<typeof schema>
+export type LogLine = Document & z.infer<typeof schema>
 
 const logLinesCollection = wrapCollection<LogLine>("log-lines", {
   schema,

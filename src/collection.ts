@@ -1,5 +1,5 @@
 import { Collection, ObjectID, IndexSpecification } from "mongodb"
-import { Schema, object } from "yup"
+import { object, ZodObject } from "zod"
 import syncIndexes from "./indexes/syncIndexes"
 import { onConnected, onDisconnected } from "./connectionStatus"
 import { NotYetConnectedError } from "./errors"
@@ -19,7 +19,7 @@ export default function wrapCollection<DocumentType extends Document>(
     schema,
     indexes = []
   }: {
-    schema?: Schema<any>
+    schema?: ZodObject<any>
     indexes?: IndexSpecification[]
   } = {}
 ): WrappedCollection<DocumentType> {
@@ -45,7 +45,7 @@ export default function wrapCollection<DocumentType extends Document>(
   const dataLoaderMethods = setupDataLoaderMethods(ensureCollection)
   const customMethods = setupCustomMethods(
     ensureCollection,
-    schema || object(),
+    schema || object({}),
     dataLoaderMethods.findById
   )
 

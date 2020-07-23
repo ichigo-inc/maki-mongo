@@ -1,13 +1,11 @@
-import { mixed } from "yup"
+import * as z from "zod"
 import { ObjectId } from "mongodb"
 
 const objectId = () =>
-  mixed<ObjectId>()
-    .transform((value) => value && new ObjectId(value))
-    .test(
-      "isObjectId",
-      ({ path }) => `${path} must be an ObjectId`,
-      (value) => (value ? value instanceof ObjectId : true)
-    )
+  z
+    .instanceof(ObjectId)
+    .refine((value) => (value ? value instanceof ObjectId : true), {
+      message: "must be an ObjectId"
+    })
 
 export default objectId

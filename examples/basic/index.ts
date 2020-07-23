@@ -1,11 +1,12 @@
+import * as z from "zod"
 import { wrapCollection, Document, connect, disconnect } from "../../src"
-import { object, InferType, string } from "yup"
 
-const schema = object().required().shape({
-  name: string().required()
+const schema = z.object({
+  name: z.string(),
+  age: z.number()
 })
 
-export type Thing = Document & InferType<typeof schema>
+export type Thing = Document & z.infer<typeof schema>
 
 const thingsCollection = wrapCollection<Thing>("things", { schema })
 
@@ -13,8 +14,8 @@ connect("mongodb://localhost:27017/caramon-basic").then(async () => {
   await thingsCollection.deleteMany({})
   console.log("Deleted all the things")
 
-  const thing1 = await thingsCollection.createDocument({ name: "one" })
-  const thing2 = await thingsCollection.createDocument({ name: "two" })
+  const thing1 = await thingsCollection.createDocument({ name: "one", age: 10 })
+  const thing2 = await thingsCollection.createDocument({ name: "two", age: 10 })
   console.log("Created things:", [thing1, thing2])
   console.log(
     "Reloading from the database returns:",
