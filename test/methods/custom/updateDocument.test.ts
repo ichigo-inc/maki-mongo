@@ -50,6 +50,24 @@ describe("connect()", () => {
     done()
   })
 
+  it("sets updatedAt", async (done) => {
+    await updateDocument({
+      collection: currentCollection!,
+      temporaryCollection: temporaryCollection!,
+      schema,
+      document: item!,
+      update: { $set: { name: "world" } }
+    })
+
+    const updatedDocument = await currentCollection!.findOne({})
+
+    expect(updatedDocument!.updatedAt.getTime()).toBeGreaterThan(
+      updatedDocument!.createdAt.getTime()
+    )
+
+    done()
+  })
+
   it("validates the document with the partial-ified schema", async (done) => {
     await expect(
       updateDocument({
