@@ -10,7 +10,7 @@
   },
   "types": "./lib/types/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig-build.json",
     "test": "jest",
     "run-example:basic": "ts-node examples/basic/index.ts",
     "run-example:log-aggregator": "ts-node examples/log-aggregator/index.ts"

@@ -1,4 +1,4 @@
-import { Collection, ObjectID, IndexSpecification } from "mongodb"
+import { Collection, ObjectID, IndexSpecification, Db } from "mongodb"
 import { object, ZodObject } from "zod"
 import syncIndexes from "./indexes/syncIndexes"
 import { onConnected, onDisconnected } from "./connectionStatus"
@@ -23,22 +23,32 @@ export default function wrapCollection<DocumentType extends Document>(
     indexes?: IndexSpecification[]
   } = {}
 ): WrappedCollection<DocumentType> {
+  let db: Db | undefined
   let collection: Collection<Readonly<DocumentType>> | undefined = undefined
 
   onConnected((db) => {
+    db = db
     collection = db.collection(collectionName)
     syncIndexes(db, collection, indexes)
   })
-  onDisconnected(() => (collection = undefined))
 
-  const ensureCollection = () => {
-    if (!collection) {
+  onDisconnected(() => {
+    db = undefined
+    collection = undefined
+  })
+
+  const ensureCollection = (name?: string) => {
+    if (!db || !collection) {
       throw new NotYetConnectedError(
         "Not yet connected to MongoDB. Make sure you call and wait for connect() before doing any database operations"
       )
     }
 
-    return collection
+    if (name) {
+      return db.collection(name)
+    } else {
+      return collection
+    }
   }
 
   const collectionMethods = setupCollectionMethods(ensureCollection)

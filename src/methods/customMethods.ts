@@ -3,33 +3,35 @@ import {
   FilterQuery,
   FindOneOptions,
   UpdateQuery,
-  FindOneAndUpdateOption,
-  ObjectId
+  ObjectId,
+  CollectionInsertOneOptions
 } from "mongodb"
 import { Document } from "../collection"
 import { ZodObject } from "zod"
-
-export type AttributesOnCreate<DocumentType extends Document> = Omit<
-  DocumentType,
-  "_id" | "createdAt" | "updatedAt"
-> &
-  Partial<Pick<DocumentType, "_id" | "createdAt" | "updatedAt">>
+import updateDocument, { UpdateDocumentOptions } from "./custom/updateDocument"
+import createDocument, { AttributesOnCreate } from "./custom/createDocument"
+import exists from "./custom/exists"
+import processInBatches from "./custom/processInBatches"
 
 export interface CustomMethods<DocumentType extends Document> {
   processInBatches(config: {
     batchSize?: number
     query?: FilterQuery<DocumentType>
+    options?: FindOneOptions
     process: (records: DocumentType[]) => Promise<any>
   }): Promise<void>
 
   exists(query?: FilterQuery<DocumentType>, options?: FindOneOptions): Promise<boolean>
 
-  createDocument(document: AttributesOnCreate<DocumentType>): Promise<DocumentType | undefined>
+  createDocument(
+    document: AttributesOnCreate<DocumentType>,
+    options?: CollectionInsertOneOptions
+  ): Promise<DocumentType | undefined>
 
   updateDocument(
     document: DocumentType,
     update: UpdateQuery<DocumentType>,
-    options?: FindOneAndUpdateOption
+    options?: UpdateDocumentOptions
   ): Promise<DocumentType | undefined>
 
   deleteDocument(document: DocumentType): Promise<DocumentType>
@@ -38,68 +40,45 @@ export interface CustomMethods<DocumentType extends Document> {
 }
 
 export default function setupCustomMethods<DocumentType extends Document>(
-  ensureCollection: () => Collection<DocumentType>,
+  ensureCollection: (name?: string) => Collection<DocumentType>,
   schema: ZodObject<any>,
   findById: (_id: ObjectId) => Promise<DocumentType | undefined>
 ): CustomMethods<DocumentType> {
   return {
-    async processInBatches({ batchSize = 1000, query = {}, process }) {
-      const collection = ensureCollection()
-      let skip = 0
-
-      while (true) {
-        const records = await collection
-          .find(query)
-          .sort({ _id: 1 })
-          .limit(batchSize)
-          .skip(skip)
-          .toArray()
-
-        if (!records.length) {
-          break
-        }
-
-        await process(records)
-        skip += records.length
-      }
+    async processInBatches({ batchSize, query, options, process }) {
+      return await processInBatches({
+        collection: ensureCollection(),
+        batchSize,
+        query,
+        options,
+        process
+      })
     },
 
     async exists(query, options) {
-      const collection = ensureCollection()
-      const foundCount = await collection
-        .find(query || {}, options)
-        .limit(1)
-        .count()
-
-      return foundCount > 0
+      return await exists({ collection: ensureCollection(), query, options })
     },
 
-    async createDocument(document) {
-      const castDocument = schema.parse(document)
+    async createDocument(document, options) {
+      const insertedId = await createDocument({
+        collection: ensureCollection(),
+        schema,
+        document,
+        options
+      })
 
-      const collection = ensureCollection()
-
-      const result = await collection.insertOne({
-        createdAt: document.createdAt || new Date(),
-        updatedAt: document.updatedAt || new Date(),
-        ...castDocument
-      } as any)
-
-      return await findById(result.insertedId)
+      return insertedId && (await findById(insertedId))
     },
 
     async updateDocument(document, update, options) {
-      if (update.$set) {
-        schema.deepPartial().nonstrict().parse(update.$set)
-      }
-
-      const result = await ensureCollection().findOneAndUpdate(
-        { _id: document._id } as any,
-        { ...update, $set: { updatedAt: new Date(), ...update.$set } } as any,
-        { returnOriginal: false, ...options }
-      )
-
-      return result.value
+      return await updateDocument({
+        collection: ensureCollection(),
+        temporaryCollection: ensureCollection("__caramonTemporaryUpdates"),
+        schema,
+        document,
+        update,
+        options
+      })
     },
 
     async deleteDocument(document) {
