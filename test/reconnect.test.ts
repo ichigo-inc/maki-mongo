@@ -1,14 +1,14 @@
-import connect from "../src/connect"
+import reconnect from "../src/reconnect"
 import disconnect from "../src/disconnect"
 import { currentClient, currentDb } from "../src/connectionStatus"
 
-describe("connect()", () => {
+describe("reconnect()", () => {
   afterEach(async () => {
     await disconnect()
   })
 
   it("connects to a database", async () => {
-    await connect(process.env.MONGO_URL!)
+    await reconnect(process.env.MONGO_URL!)
 
     expect(currentClient()).toBeTruthy()
   })

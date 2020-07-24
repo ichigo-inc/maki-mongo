@@ -1,11 +1,11 @@
 import { Collection, ObjectID, IndexSpecification, Db } from "mongodb"
 import { object, ZodObject } from "zod"
 import syncIndexes from "./indexes/syncIndexes"
-import { onConnected, onDisconnected } from "./connectionStatus"
 import { NotYetConnectedError } from "./errors"
 import setupCollectionMethods, { WrappedCollectionMethods } from "./methods/collectionMethods"
 import setupDataLoaderMethods, { DataLoaderMethods } from "./methods/dataLoaderMethods"
 import setupCustomMethods, { CustomMethods } from "./methods/customMethods"
+import { onConnected, onDisconnected, currentDb } from "./connectionStatus"
 
 export interface Document {
   _id: ObjectID
@@ -38,6 +38,11 @@ export default function wrapCollection<DocumentType extends Document>(
   })
 
   const ensureCollection = (name?: string) => {
+    if (!db && currentDb()) {
+      db = currentDb()
+      collection = db?.collection(collectionName)
+    }
+
     if (!db || !collection) {
       throw new NotYetConnectedError(
         "Not yet connected to MongoDB. Make sure you call and wait for connect() before doing any database operations"
@@ -70,7 +75,7 @@ export default function wrapCollection<DocumentType extends Document>(
   }
 }
 
-export type WrappedCollection<DocumentType extends Document> = {
+export type WrappedCollection<DocumentType extends Document = Document> = {
   collection: Collection | undefined
 } & CustomMethods<Readonly<DocumentType>> &
   DataLoaderMethods<Readonly<DocumentType>> &
