@@ -5,7 +5,7 @@ import { Document } from "../collection"
 export interface DataLoaderMethods<T> {
   findById(_id?: ObjectId): Promise<T | undefined>
 
-  findByIds(_ids: (ObjectId | undefined)[]): Promise<(T | Error | undefined)[]>
+  findByIds(_ids: ObjectId[]): Promise<(T | Error | undefined)[]>
 }
 
 export default function setupDataLoaderMethods<T extends Document>(

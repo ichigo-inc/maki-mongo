@@ -5,7 +5,7 @@ import { currentDb, Document } from "../../../src"
 import createDocument from "../../../src/methods/custom/createDocument"
 import exists from "../../../src/methods/custom/exists"
 
-describe("connect()", () => {
+describe("exists()", () => {
   useDatabase()
 
   const schema = z.object({

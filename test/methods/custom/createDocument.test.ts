@@ -4,7 +4,7 @@ import useDatabase from "../../support/useDatabase"
 import { currentDb, Document } from "../../../src"
 import createDocument from "../../../src/methods/custom/createDocument"
 
-describe("connect()", () => {
+describe("createDocument()", () => {
   useDatabase()
 
   const schema = z.object({

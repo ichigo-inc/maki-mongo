@@ -21,7 +21,7 @@ export default function setupCollectionMethods<T>(
   ensureCollection: () => Collection<T>
 ): WrappedCollectionMethods<T> {
   const collectionMethod = <Name extends keyof Collection>(name: Name): Collection<T>[Name] => {
-    return async (...args: Parameters<Collection<T>[Name]>) => {
+    return (...args: Parameters<Collection<T>[Name]>) => {
       return ensureCollection()[name](...args)
     }
   }
