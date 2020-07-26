@@ -1,6 +1,5 @@
 import connect from "../src/connect"
 import disconnect from "../src/disconnect"
-import { currentClient, currentDb } from "../src/connectionStatus"
 
 describe("connect()", () => {
   afterEach(async () => {
@@ -8,8 +7,8 @@ describe("connect()", () => {
   })
 
   it("connects to a database", async () => {
-    await connect(process.env.MONGO_URL!)
+    const client = await connect(process.env.MONGO_URL!)
 
-    expect(currentClient()).toBeTruthy()
+    expect(client.isConnected).toEqual(true)
   })
 })

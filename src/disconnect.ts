@@ -1,10 +1,7 @@
-import { currentClient, unsetConnection } from "./connectionStatus"
+import { MongoClient } from "mongodb"
 
-export default async function disconnect() {
-  const client = currentClient()
-
+export default async function disconnect(client?: MongoClient) {
   if (client) {
     await client.close()
-    unsetConnection()
   }
 }

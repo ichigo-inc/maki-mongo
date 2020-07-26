@@ -1,15 +1,14 @@
 import connect from "../src/connect"
 import disconnect from "../src/disconnect"
-import { currentClient } from "../src/connectionStatus"
 
 describe("disconnect()", () => {
   it("disconnects from a database", async () => {
-    await connect(process.env.MONGO_URL!)
+    const client = await connect(process.env.MONGO_URL!)
 
-    expect(currentClient()).toBeTruthy()
+    expect(client.isConnected).toEqual(true)
 
-    await disconnect()
+    await disconnect(client)
 
-    expect(currentClient()).toBeUndefined()
+    expect(client.isConnected).toEqual(false)
   })
 })

@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb"
-import { setConnection } from "./connectionStatus"
 
-let connectionPromise: Promise<void> | undefined
+let connectionPromise: Promise<MongoClient> | undefined
 
 export default async function connect(mongoUri: string) {
   if (connectionPromise) {
@@ -12,8 +11,8 @@ export default async function connect(mongoUri: string) {
     useNewUrlParser: true,
     useUnifiedTopology: true
   }).then((client) => {
-    setConnection(client, client.db())
     connectionPromise = undefined
+    return client
   })
 
   return await connectionPromise

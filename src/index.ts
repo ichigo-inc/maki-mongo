@@ -1,21 +1,18 @@
-import wrapCollection from "./collection"
-import connect from "./connect"
-import disconnect from "./disconnect"
-import reconnect from "./reconnect"
-import { currentClient, currentDb, isConnected } from "./connectionStatus"
+import createClient from "./client"
 
-export { connect, disconnect, reconnect, currentClient, currentDb, isConnected, wrapCollection }
+export { createClient }
 
-const caramon = {
-  connect,
-  disconnect,
-  reconnect,
-  currentClient,
-  currentDb,
-  isConnected,
-  wrapCollection
-}
-export default caramon
+const defaultClient = createClient()
+
+export const connect = defaultClient.connect
+export const disconnect = defaultClient.disconnect
+export const reconnect = defaultClient.reconnect
+export const wrapCollection = defaultClient.wrapCollection
+export const currentClient = defaultClient.currentClient
+export const currentDb = defaultClient.currentDb
+export const isConnected = defaultClient.isConnected
+
+export default defaultClient
 
 export * from "./errors"
 
