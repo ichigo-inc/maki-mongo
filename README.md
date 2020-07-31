@@ -8,13 +8,13 @@ which gives you utilities like validation and batching without the overhead of a
 With npm:
 
 ```sh
-npm install @movefast-llc/MakiMongo
+npm install @movefast-llc/maki-mongo
 ```
 
 With yarn:
 
 ```sh
-yarn add @movefast-llc/MakiMongo
+yarn add @movefast-llc/maki-mongo
 ```
 
 ## 🚀 Quick start
@@ -27,7 +27,7 @@ With TypeScript:
 ```typescript
 // Zod is used for object schema validation
 import * as z from "zod"
-import { Document, wrapCollection, connect, disconnect } from "@movefast-llc/MakiMongo"
+import { Document, wrapCollection, connect, disconnect } from "@movefast-llc/maki-mongo"
 
 // MakiMongo works by wrapping each MongoDB collection
 // First, this is the basic schema which documents in this collection are expected to follow
@@ -58,7 +58,7 @@ Without TypeScript:
 
 ```js
 const z = require("zod")
-const { wrapCollection, connect, disconnect } = require("@movefast-llc/MakiMongo")
+const { wrapCollection, connect, disconnect } = require("@movefast-llc/maki-mongo")
 
 // This is the same as the previous example, minus the type definitions
 const schema = z.object({
@@ -81,7 +81,7 @@ connect("mongodb://localhost:27017/maki-mongo-basic").then(async () => {
 ## Top-level method overview
 
 ```typescript
-import MakiMongo from "@movefast-llc/MakiMongo"
+import MakiMongo from "@movefast-llc/maki-mongo"
 
 // Wraps a collection for use with MakiMongo - see below
 MakiMongo.wrapCollection(name, { schema, indexes })
