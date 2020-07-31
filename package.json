@@ -1,7 +1,7 @@
 {
   "name": "@movefast-llc/maki-mongo",
   "version": "0.2.0",
-  "author": "<reason.koan@gmail.com>",
+  "author": "<dev@movefast.xyz>",
   "repository": {
     "type": "git",
     "directory": "https://github.com/movefast-llc/maki-mongo"
