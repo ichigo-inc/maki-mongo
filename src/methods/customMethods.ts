@@ -73,7 +73,7 @@ export default function setupCustomMethods<DocumentType extends Document>(
     async updateDocument(document, update, options) {
       return await updateDocument({
         collection: ensureCollection(),
-        temporaryCollection: ensureCollection("__caramonTemporaryUpdates"),
+        temporaryCollection: ensureCollection("__makiMongoTemporaryUpdates"),
         schema,
         document,
         update,

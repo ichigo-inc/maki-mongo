@@ -1,7 +1,11 @@
 {
-  "name": "caramon",
+  "name": "@movefast-llc/maki-mongo",
   "version": "1.0.0",
   "author": "<reason.koan@gmail.com>",
+  "repository": {
+    "type": "git",
+    "directory": "https://github.com/movefast-llc/maki-mongo"
+  },
   "license": "MIT",
   "main": "./lib/commonjs/index.js",
   "exports": {

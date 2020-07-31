@@ -1,6 +1,6 @@
-# 🍮 Caramon
+# 🍣 MakiMongo
 
-Caramon is a lightweight wrapper around the [MongoDB](https://www.mongodb.org/) client for Node,
+MakiMongo is a lightweight wrapper around the [MongoDB](https://www.mongodb.org/) client for Node,
 which gives you utilities like validation and batching without the overhead of a full ODM/ORM.
 
 ## 🛠 Installation
@@ -8,18 +8,18 @@ which gives you utilities like validation and batching without the overhead of a
 With npm:
 
 ```sh
-npm install @movefast-llc/caramon
+npm install @movefast-llc/MakiMongo
 ```
 
 With yarn:
 
 ```sh
-yarn add @movefast-llc/caramon
+yarn add @movefast-llc/MakiMongo
 ```
 
 ## 🚀 Quick start
 
-Caramon is designed to work best with [TypeScript](https://www.typescriptlang.org/), but it also
+MakiMongo is designed to work best with [TypeScript](https://www.typescriptlang.org/), but it also
 works well with plain JavaScript.
 
 With TypeScript:
@@ -27,9 +27,9 @@ With TypeScript:
 ```typescript
 // Zod is used for object schema validation
 import * as z from "zod"
-import { Document, wrapCollection, connect, disconnect } from "@movefast-llc/caramon"
+import { Document, wrapCollection, connect, disconnect } from "@movefast-llc/MakiMongo"
 
-// Caramon works by wrapping each MongoDB collection
+// MakiMongo works by wrapping each MongoDB collection
 // First, this is the basic schema which documents in this collection are expected to follow
 const schema = z.object({
   name: z.string()
@@ -46,7 +46,7 @@ const thingsCollection = wrapCollection<Thing>("things", {
   indexes: [{ key: { name: 1 } }]
 })
 
-connect("mongodb://localhost:27017/caramon-basic").then(async () => {
+connect("mongodb://localhost:27017/maki-mongo-basic").then(async () => {
   // Now this call is validated both with TypeScript and at runtime with Zod
   await thingsCollection.createDocument({ name: "one", age: 10 })
 
@@ -58,7 +58,7 @@ Without TypeScript:
 
 ```js
 const z = require("zod")
-const { wrapCollection, connect, disconnect } = require("@movefast-llc/caramon")
+const { wrapCollection, connect, disconnect } = require("@movefast-llc/MakiMongo")
 
 // This is the same as the previous example, minus the type definitions
 const schema = z.object({
@@ -70,7 +70,7 @@ const thingsCollection = wrapCollection("things", {
   indexes: [{ key: { name: 1 } }]
 })
 
-connect("mongodb://localhost:27017/caramon-basic").then(async () => {
+connect("mongodb://localhost:27017/maki-mongo-basic").then(async () => {
   // This call is validated at runtime with Zod
   await thingsCollection.createDocument({ name: "one", age: 10 })
 
@@ -81,24 +81,24 @@ connect("mongodb://localhost:27017/caramon-basic").then(async () => {
 ## Top-level method overview
 
 ```typescript
-import caramon from "@movefast-llc/caramon"
+import MakiMongo from "@movefast-llc/MakiMongo"
 
-// Wraps a collection for use with caramon - see below
-caramon.wrapCollection(name, { schema, indexes })
+// Wraps a collection for use with MakiMongo - see below
+MakiMongo.wrapCollection(name, { schema, indexes })
 // Connects to a database. This MUST be awaited before you do any database operations
-caramon.connect(url)
+MakiMongo.connect(url)
 // Disconnects from the current database
-caramon.disconnect()
+MakiMongo.disconnect()
 // Disconnects if connected, then connects to another database
-caramon.reconnect(url)
+MakiMongo.reconnect(url)
 // Returns the current MongoClient if connected
-caramon.currentClient()
+MakiMongo.currentClient()
 // Returns the current Db if connected
-caramon.currentDb()
+MakiMongo.currentDb()
 // Checks whether a connection has been established yet
-caramon.isConnected()
+MakiMongo.isConnected()
 // Creates a new client manager with all the above methods (see "Multiple databases")
-caramon.createClient()
+MakiMongo.createClient()
 ```
 
 ## Collection method overview
@@ -110,7 +110,7 @@ However, since these methods are forwarded straight from the base driver, there'
 use the additional methods provided by the wrapper to validate documents.
 
 ```typescript
-const collection = caramon.wrapCollection(...)
+const collection = MakiMongo.wrapCollection(...)
 
 // This kind of thing delegates straight to the MongoDB driver
 collection.find(query, options?)
@@ -153,8 +153,8 @@ You can connect to multiple databases at once by creating multiple client manage
 `createClient` method.
 
 ```typescript
-const one = caramon.createClient()
-const two = caramon.createClient()
+const one = MakiMongo.createClient()
+const two = MakiMongo.createClient()
 
 const collectionOne = one.wrapCollection("games")
 const collectionTwo = two.wrapCollection("apps")
@@ -170,8 +170,8 @@ async function main() {
 
 ## Read more
 
-Check the [Documentation](https://movefast-llc.github.io/caramon) and
-[API Reference](https://movefast-llc.github.io/caramon/#/api).
+Check the [Documentation](https://movefast-llc.github.io/maki-mongo) and
+[API Reference](https://movefast-llc.github.io/maki-mongo/#/api).
 
 ## License
 

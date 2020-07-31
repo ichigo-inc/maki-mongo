@@ -1,5 +1,5 @@
 import createDebug from "debug"
 
-const debug = createDebug("caramon")
+const debug = createDebug("maki-mongo")
 
 export default debug

@@ -10,7 +10,7 @@ export type Thing = Document & z.infer<typeof schema>
 
 const thingsCollection = wrapCollection<Thing>("things", { schema })
 
-connect("mongodb://localhost:27017/caramon-basic").then(async () => {
+connect("mongodb://localhost:27017/maki-mongo-basic").then(async () => {
   await thingsCollection.deleteMany({})
   console.log("Deleted all the things")
 

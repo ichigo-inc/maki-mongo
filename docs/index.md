@@ -1,6 +1,6 @@
-# 🍮 Caramon
+# 🍣 MakiMongo
 
-Caramon is a lightweight wrapper around the [MongoDB](https://www.mongodb.org/) client for Node,
+MakiMongo is a lightweight wrapper around the [MongoDB](https://www.mongodb.org/) client for Node,
 which gives you utilities like validation and batching without the overhead of a full ODM/ORM.
 
 ## Features
@@ -16,18 +16,18 @@ which gives you utilities like validation and batching without the overhead of a
 With npm:
 
 ```sh
-npm install @movefast-llc/caramon
+npm install @movefast-llc/maki-mongo
 ```
 
 With yarn:
 
 ```sh
-yarn add @movefast-llc/caramon
+yarn add @movefast-llc/maki-mongo
 ```
 
 ## Quick start
 
-Caramon is designed to work best with [TypeScript](https://www.typescriptlang.org/), but it also
+MakiMongo is designed to work best with [TypeScript](https://www.typescriptlang.org/), but it also
 works well with plain JavaScript.
 
 <!-- tabs:start -->
@@ -37,9 +37,9 @@ works well with plain JavaScript.
 ```typescript
 // Zod is used for object schema validation
 import * as z from "zod"
-import { Document, wrapCollection, connect, disconnect } from "@movefast-llc/caramon"
+import { Document, wrapCollection, connect, disconnect } from "@movefast-llc/maki-mongo"
 
-// Caramon works by wrapping each MongoDB collection
+// MakiMongo works by wrapping each MongoDB collection
 // First, this is the basic schema which documents in this collection are expected to follow
 const schema = z.object({
   name: z.string()
@@ -56,7 +56,7 @@ const thingsCollection = wrapCollection<Thing>("things", {
   indexes: [{ key: { name: 1 } }]
 })
 
-connect("mongodb://localhost:27017/caramon-basic").then(async () => {
+connect("mongodb://localhost:27017/maki-mongo-basic").then(async () => {
   // Now this call is validated both with TypeScript and at runtime with Zod
   await thingsCollection.createDocument({ name: "one", age: 10 })
 
@@ -68,7 +68,7 @@ connect("mongodb://localhost:27017/caramon-basic").then(async () => {
 
 ```js
 const z = require("zod")
-const { wrapCollection, connect, disconnect } = require("@movefast-llc/caramon")
+const { wrapCollection, connect, disconnect } = require("@movefast-llc/maki-mongo")
 
 // This is the same as the previous example, minus the type definitions
 const schema = z.object({
@@ -80,7 +80,7 @@ const thingsCollection = wrapCollection("things", {
   indexes: [{ key: { name: 1 } }]
 })
 
-connect("mongodb://localhost:27017/caramon-basic").then(async () => {
+connect("mongodb://localhost:27017/maki-mongo-basic").then(async () => {
   // This call is validated at runtime with Zod
   await thingsCollection.createDocument({ name: "one", age: 10 })
 
@@ -92,8 +92,8 @@ connect("mongodb://localhost:27017/caramon-basic").then(async () => {
 
 ## Examples
 
-- [Basic](https://github.com/movefast-llc/caramon/tree/master/examples/basic)
-- [Log Aggregator](https://github.com/movefast-llc/caramon/tree/master/examples/log-aggregator)
+- [Basic](https://github.com/movefast-llc/maki-mongo/tree/master/examples/basic)
+- [Log Aggregator](https://github.com/movefast-llc/maki-mongo/tree/master/examples/log-aggregator)
 
 ## API docs
 

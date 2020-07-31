@@ -1,6 +1,6 @@
 ## Top-level exports
 
-Note: The default export is a `caramon` object with these methods, but the methods are also exported
+Note: The default export is a `MakiMongo` object with these methods, but the methods are also exported
 as named exports, so any kind of import/require/etc should just work.
 
 ### createClient
@@ -12,10 +12,10 @@ Creates a new `Client` manager. This can be used to connect to multiple database
 Example:
 
 ```typescript
-import caramon from "@movefast-llc/caramon"
+import MakiMongo from "@movefast-llc/maki-mongo"
 
-const one = caramon.createClient()
-const two = caramon.createClient()
+const one = MakiMongo.createClient()
+const two = MakiMongo.createClient()
 
 const collectionOne = one.wrapCollection("games")
 const collectionTwo = two.wrapCollection("apps")
@@ -31,10 +31,10 @@ async function main() {
 
 ### (all Client methods)
 
-Caramon creates a default client for you and exposes all the methods directly, saving you the
+MakiMongo creates a default client for you and exposes all the methods directly, saving you the
 hassle of calling `createClient` if you only need to connect to one database.
 
-For example, you can directly `import { wrapCollection, connect } from "@movefast-llc/caramon"`
+For example, you can directly `import { wrapCollection, connect } from "@movefast-llc/maki-mongo"`
 
 See below.
 
@@ -44,10 +44,10 @@ See below.
 
 `wrapCollection<DocumentType>(name, { schema?, indexes? })`
 
-Wraps a collection for use with caramon and returns the `WrappedCollection`
+Wraps a collection for use with MakiMongo and returns the `WrappedCollection`
 
 - `name` is the name of the collection in MongoDB
-- `schema` is an optional Zod schema describing the type of documents to be stored in this collection. It's expected not to include the `_id` field; this is added by Caramon automatically
+- `schema` is an optional Zod schema describing the type of documents to be stored in this collection. It's expected not to include the `_id` field; this is added by MakiMongo automatically
 - `indexes` is an optional list of indexes to have on the collection. These will be synced to the collection during the connection process. See https://docs.mongodb.com/manual/reference/command/createIndexes/
 
 Example:
@@ -150,7 +150,7 @@ if a matching document exists and `false` otherwise.
 Example:
 
 ```typescript
-await collection.exists({ name: "Caramon" })
+await collection.exists({ name: "MakiMongo" })
 ```
 
 ### processInBatches

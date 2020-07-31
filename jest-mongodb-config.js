@@ -1,7 +1,7 @@
 module.exports = {
   mongodbMemoryServerOptions: {
     instance: {
-      dbName: "caramon-jest"
+      dbName: "maki-mongo-jest"
     },
     binary: {
       version: "4.0.3",

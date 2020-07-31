@@ -9,7 +9,7 @@ server.register(projectsApi)
 
 const port = parseInt(process.env.PORT || "8080")
 
-connect("mongodb://localhost:27017/caramon-log-aggregator").then(() => {
+connect("mongodb://localhost:27017/maki-mongo-log-aggregator").then(() => {
   server.listen(port, (err) => {
     if (err) {
       console.error(err)
