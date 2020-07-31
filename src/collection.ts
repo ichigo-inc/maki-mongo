@@ -104,4 +104,4 @@ export type WrappedCollection<DocumentType extends Document = Document> = {
 } & CustomMethods<Readonly<DocumentType>> &
   DataLoaderMethods<Readonly<DocumentType>> &
   WrappedCollectionMethods<Readonly<DocumentType>> &
-  Pick<Collection<T>, WrappedValues>
+  Pick<Collection<DocumentType>, WrappedValues>
