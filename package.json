@@ -1,6 +1,6 @@
 {
   "name": "@movefast-llc/maki-mongo",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "<dev@movefast.xyz>",
   "repository": {
     "type": "git",
@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "main": "./lib/index.js",
-  "types": "./lib/types/index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig-build.json",
     "test": "jest --runInBand --watch",
