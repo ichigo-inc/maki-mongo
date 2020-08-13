@@ -7,11 +7,7 @@
     "directory": "https://github.com/movefast-llc/maki-mongo"
   },
   "license": "MIT",
-  "main": "./lib/commonjs/index.js",
-  "exports": {
-    "import": "./lib/commonjs/index.js",
-    "require": "./lib/esm/index.js"
-  },
+  "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig-build.json",
