@@ -25,17 +25,17 @@ export default function setupCollectionWrapper({
       schema,
       indexes = []
     }: {
-      schema?: z.ZodObject<any>
+      schema?: z.ZodObject<any, any, any>
       indexes?: IndexSpecification[]
     } = {}
   ): WrappedCollection<DocumentType> {
     let db: Db | undefined
     let collection: Collection<Readonly<DocumentType>> | undefined = undefined
 
-    onConnected((db) => {
-      db = db
-      collection = db.collection(collectionName)
-      syncIndexes(db, collection, indexes)
+    onConnected((newDb) => {
+      db = newDb
+      collection = newDb.collection(collectionName)
+      syncIndexes(newDb, collection, indexes)
     })
 
     onDisconnected(() => {
@@ -102,7 +102,7 @@ export default function setupCollectionWrapper({
 type WrappedValues = "collectionName" | "namespace" | "writeConcern" | "readConcern" | "hint"
 
 export type WrappedCollection<DocumentType extends Document = Document> = {
-  schema?: z.ZodObject<any>
+  schema?: z.ZodObject<any, any, any>
   mongoCollection: Collection | undefined
 } & CustomMethods<Readonly<DocumentType>> &
   DataLoaderMethods<Readonly<DocumentType>> &

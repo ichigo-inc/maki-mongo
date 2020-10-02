@@ -14,7 +14,7 @@ export default async function updateDocument<DocumentType extends Document>({
 }: {
   collection: Collection<DocumentType>
   temporaryCollection: Collection<any>
-  schema: ZodObject<any>
+  schema: ZodObject<any, any, any>
   document: DocumentType
   update: UpdateQuery<DocumentType>
   options?: UpdateDocumentOptions

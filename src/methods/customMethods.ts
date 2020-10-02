@@ -41,7 +41,7 @@ export interface CustomMethods<DocumentType extends Document> {
 
 export default function setupCustomMethods<DocumentType extends Document>(
   ensureCollection: (name?: string) => Collection<DocumentType>,
-  schema: ZodObject<any>,
+  schema: ZodObject<any, any, any>,
   findById: (_id: ObjectId) => Promise<DocumentType | undefined>
 ): CustomMethods<DocumentType> {
   return {

@@ -21,7 +21,7 @@ export default async function createDocument<DocumentType extends Document>({
   options
 }: {
   collection: Collection<DocumentType>
-  schema: ZodObject<any>
+  schema: ZodObject<any, any, any>
   document: AttributesOnCreate<DocumentType>
   options?: CollectionInsertOneOptions
 }): Promise<ObjectId | undefined> {

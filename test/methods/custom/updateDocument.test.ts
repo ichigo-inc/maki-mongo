@@ -7,10 +7,12 @@ import updateDocument from "../../../src/methods/custom/updateDocument"
 describe("updateDocument()", () => {
   useDatabase()
 
-  const schema = z.object({
-    name: z.string(),
-    items: z.array(z.string())
-  })
+  const schema = z
+    .object({
+      name: z.string(),
+      items: z.array(z.string())
+    })
+    .strict()
 
   type Item = Document & z.infer<typeof schema>
 
@@ -78,7 +80,7 @@ describe("updateDocument()", () => {
         update: { $set: { name: 1 } } as any
       })
     ).rejects.toMatchObject({
-      message: expect.stringMatching(/Invalid input/)
+      message: expect.stringMatching(/invalid_type/)
     })
 
     done()
