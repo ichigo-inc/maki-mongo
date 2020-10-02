@@ -16,4 +16,4 @@ export default defaultClient
 
 export * from "./errors"
 
-export { Document } from "./collection"
+export { WrappedCollection, Document } from "./collection"
