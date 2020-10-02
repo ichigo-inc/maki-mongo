@@ -9,6 +9,6 @@ describe("connect()", () => {
   it("connects to a database", async () => {
     const client = await connect(process.env.MONGO_URL!)
 
-    expect(client.isConnected).toEqual(true)
+    expect(client.isConnected()).toEqual(true)
   })
 })
