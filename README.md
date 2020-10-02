@@ -1,5 +1,7 @@
 # 🍣 MakiMongo
 
+![CI](https://github.com/movefast-llc/maki-mongo/workflows/CI/badge.svg)
+
 MakiMongo is a lightweight wrapper around the [MongoDB](https://www.mongodb.org/) client for Node,
 which gives you utilities like validation and batching without the overhead of a full ODM/ORM.
 
