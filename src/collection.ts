@@ -102,7 +102,11 @@ export default function setupCollectionWrapper({
 type WrappedValues = "collectionName" | "namespace" | "writeConcern" | "readConcern" | "hint"
 
 export type WrappedCollection<DocumentType extends Document = Document> = {
-  schema?: z.ZodObject<any, any, any>
+  schema?:
+    | z.ZodObject<any, any, any>
+    | z.ZodUnion<any>
+    | z.ZodIntersection<any, any>
+    | z.ZodRecord<any>
   mongoCollection: Collection | undefined
 } & CustomMethods<Readonly<DocumentType>> &
   DataLoaderMethods<Readonly<DocumentType>> &
