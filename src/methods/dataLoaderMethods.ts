@@ -1,11 +1,12 @@
 import { Collection, ObjectId } from "mongodb"
 import DataLoader from "dataloader"
 import { Document } from "../collection"
+import { types } from "util"
 
 export interface DataLoaderMethods<T> {
   findById(_id?: ObjectId): Promise<T | undefined>
 
-  findByIds(_ids: ObjectId[]): Promise<(T | Error | undefined)[]>
+  findByIds(_ids: ObjectId[]): Promise<T[]>
 }
 
 export default function setupDataLoaderMethods<T extends Document>(
@@ -31,7 +32,15 @@ export default function setupDataLoaderMethods<T extends Document>(
     },
 
     async findByIds(ids) {
-      return dataLoader.loadMany(ids || [])
+      const result = await dataLoader.loadMany(ids || [])
+
+      result.forEach((item) => {
+        if (types.isNativeError(item)) {
+          throw item
+        }
+      })
+
+      return result.filter(Boolean) as T[]
     }
   }
 }
