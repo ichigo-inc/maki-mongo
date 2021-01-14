@@ -12,6 +12,12 @@ export interface Document {
   updatedAt: Date
 }
 
+export type Schema =
+  | z.ZodObject<any, any, any>
+  | z.ZodUnion<any>
+  | z.ZodIntersection<any, any>
+  | z.ZodRecord<any>
+
 export default function setupCollectionWrapper({
   onConnected,
   onDisconnected
@@ -25,7 +31,7 @@ export default function setupCollectionWrapper({
       schema,
       indexes = []
     }: {
-      schema?: z.ZodObject<any, any, any>
+      schema?: Schema
       indexes?: IndexSpecification[]
     } = {}
   ): WrappedCollection<DocumentType> {
@@ -102,11 +108,7 @@ export default function setupCollectionWrapper({
 type WrappedValues = "collectionName" | "namespace" | "writeConcern" | "readConcern" | "hint"
 
 export type WrappedCollection<DocumentType extends Document = Document> = {
-  schema?:
-    | z.ZodObject<any, any, any>
-    | z.ZodUnion<any>
-    | z.ZodIntersection<any, any>
-    | z.ZodRecord<any>
+  schema?: Schema
   mongoCollection: Collection | undefined
 } & CustomMethods<Readonly<DocumentType>> &
   DataLoaderMethods<Readonly<DocumentType>> &

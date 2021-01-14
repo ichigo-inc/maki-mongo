@@ -5,8 +5,7 @@ import {
   CollectionInsertOneOptions,
   ObjectId
 } from "mongodb"
-import { ZodObject } from "zod"
-import { Document } from "../../collection"
+import { Document, Schema } from "../../collection"
 
 export type AttributesOnCreate<DocumentType extends Document> = Omit<
   DocumentType,
@@ -21,7 +20,7 @@ export default async function createDocument<DocumentType extends Document>({
   options
 }: {
   collection: Collection<DocumentType>
-  schema: ZodObject<any, any, any>
+  schema: Schema
   document: AttributesOnCreate<DocumentType>
   options?: CollectionInsertOneOptions
 }): Promise<ObjectId | undefined> {

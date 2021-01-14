@@ -1,6 +1,6 @@
 import { UpdateQuery, FindOneAndUpdateOption, Collection } from "mongodb"
 import { ZodObject } from "zod"
-import { Document } from "../../collection"
+import { Document, Schema } from "../../collection"
 
 export type UpdateDocumentOptions = FindOneAndUpdateOption & { fullValidate?: boolean }
 
@@ -14,7 +14,7 @@ export default async function updateDocument<DocumentType extends Document>({
 }: {
   collection: Collection<DocumentType>
   temporaryCollection: Collection<any>
-  schema: ZodObject<any, any, any>
+  schema: Schema
   document: DocumentType
   update: UpdateQuery<DocumentType>
   options?: UpdateDocumentOptions
@@ -32,7 +32,7 @@ export default async function updateDocument<DocumentType extends Document>({
     } finally {
       await temporaryCollection.deleteOne({ _id: document._id } as any)
     }
-  } else if (update.$set) {
+  } else if (update.$set && schema instanceof ZodObject) {
     schema.deepPartial().nonstrict().parse(update.$set)
   }
 

@@ -6,8 +6,7 @@ import {
   ObjectId,
   CollectionInsertOneOptions
 } from "mongodb"
-import { Document } from "../collection"
-import { ZodObject } from "zod"
+import { Document, Schema } from "../collection"
 import updateDocument, { UpdateDocumentOptions } from "./custom/updateDocument"
 import createDocument, { AttributesOnCreate } from "./custom/createDocument"
 import exists from "./custom/exists"
@@ -41,7 +40,7 @@ export interface CustomMethods<DocumentType extends Document> {
 
 export default function setupCustomMethods<DocumentType extends Document>(
   ensureCollection: (name?: string) => Collection<DocumentType>,
-  schema: ZodObject<any, any, any>,
+  schema: Schema,
   findById: (_id: ObjectId) => Promise<DocumentType | undefined>
 ): CustomMethods<DocumentType> {
   return {
