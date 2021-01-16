@@ -7,30 +7,30 @@ export default function createClient() {
   let client: MongoClient | undefined = undefined
   let db: Db | undefined = undefined
 
-  const connectionCallbacks: Array<(db: Db) => void> = []
-  const disconnectionCallbacks: Array<() => void> = []
+  const connectionCallbacks: Array<(db: Db) => void | Promise<void>> = []
+  const disconnectionCallbacks: Array<() => void | Promise<void>> = []
 
-  const setConnection = (newClient: MongoClient, newDb: Db) => {
+  const setConnection = async (newClient: MongoClient, newDb: Db) => {
     client = newClient
     db = newDb
-    connectionCallbacks.forEach((handler) => handler(newDb))
+    await Promise.all(connectionCallbacks.map((handler) => handler(newDb)))
   }
 
-  const unsetConnection = () => {
+  const unsetConnection = async () => {
     db = undefined
     client = undefined
-    disconnectionCallbacks.forEach((handler) => handler())
+    await Promise.all(disconnectionCallbacks.map((handler) => handler()))
   }
 
   return {
     async connect(mongoUri: string) {
       const client = await connect(mongoUri)
-      setConnection(client, client.db())
+      await setConnection(client, client.db())
     },
 
     async disconnect() {
       await disconnect(client)
-      unsetConnection()
+      await unsetConnection()
     },
 
     async reconnect(mongoUri: string) {

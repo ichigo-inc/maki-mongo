@@ -1,4 +1,4 @@
-import { wrapCollection, disconnect, connect } from "../src"
+import { wrapCollection, disconnect, connect, currentDb } from "../src"
 
 describe("wrapCollection()", () => {
   it("wraps a collection with custom/dataLoader/collection methods", () => {
@@ -27,6 +27,20 @@ describe("wrapCollection()", () => {
       await connect(process.env.MONGO_URL!)
 
       expect(await collection.find().toArray()).toBeInstanceOf(Array)
+
+      done()
+    })
+
+    it("syncs indexes to the connected database", async (done) => {
+      const collection = wrapCollection("tests", { indexes: [{ key: { name: 1 } }] })
+
+      await connect(process.env.MONGO_URL!)
+
+      expect(await collection.indexes()).toContainEqual(
+        expect.objectContaining({
+          key: { name: 1 }
+        })
+      )
 
       done()
     })

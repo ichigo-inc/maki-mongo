@@ -22,8 +22,8 @@ export default function setupCollectionWrapper({
   onConnected,
   onDisconnected
 }: {
-  onConnected: (callback: (db: Db) => void) => void
-  onDisconnected: (callback: () => void) => void
+  onConnected: (callback: (db: Db) => void | Promise<void>) => void
+  onDisconnected: (callback: () => void | Promise<void>) => void
 }) {
   return function wrapCollection<DocumentType extends Document>(
     collectionName: string,
@@ -38,10 +38,10 @@ export default function setupCollectionWrapper({
     let db: Db | undefined
     let collection: Collection<Readonly<DocumentType>> | undefined = undefined
 
-    onConnected((newDb) => {
+    onConnected(async (newDb) => {
       db = newDb
       collection = newDb.collection(collectionName)
-      syncIndexes(newDb, collection, indexes)
+      await syncIndexes(newDb, collection, indexes)
     })
 
     onDisconnected(() => {
