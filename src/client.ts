@@ -36,7 +36,7 @@ export default function createClient() {
     async reconnect(mongoUri: string) {
       await disconnect(client)
       const newClient = await connect(mongoUri)
-      setConnection(newClient, newClient.db())
+      await setConnection(newClient, newClient.db())
     },
 
     wrapCollection: setupCollectionWrapper({
